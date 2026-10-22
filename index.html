@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173e35">
+  <meta name="description" content="Consulta el lugar y la mesa de votación por carrera para las elecciones FEC UdeC 2026.">
+  <title>Consulta tu mesa | Elecciones FEC UdeC 2026</title>
+  <style>
+    :root { --green:#223c6a; --green2:#182d50; --accent:#fb9d06; --pale:#bbd6f0; --ink:#17243a; --muted:#5c6b80; --line:#d5e0ed; --bg:#f4f8fc; --white:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+    header { background:var(--green); color:#fff; padding:28px 20px 34px; border-bottom:6px solid var(--accent); }
+    .wrap { width:min(760px,100% - 32px); margin:0 auto; }
+    .brand { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
+    .logo { width:44px; height:44px; display:grid; place-items:center; background:var(--pale); color:var(--green); border-radius:12px; font-size:24px; font-weight:800; }
+    .brand strong { display:block; letter-spacing:.02em; }
+    .brand span { display:block; color:var(--pale); font-size:.9rem; }
+    h1 { font-size:clamp(1.8rem,5vw,2.6rem); line-height:1.1; margin:0 0 12px; letter-spacing:-.03em; }
+    .intro { max-width:570px; margin:0; color:#eaf2fc; }
+    main { margin-top:-18px; padding-bottom:36px; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:18px; padding:24px; box-shadow:0 10px 30px #102a1d0b; }
+    label { display:block; font-weight:700; margin-bottom:8px; }
+    .searchrow { display:flex; gap:10px; }
+    input { min-width:0; flex:1; padding:13px 14px; border:1px solid #b9c9c0; border-radius:10px; font:inherit; color:var(--ink); background:#fff; }
+    input:focus { outline:3px solid var(--pale); border-color:var(--green2); }
+    button { border:0; border-radius:10px; padding:13px 17px; font:inherit; font-weight:700; background:var(--green); color:white; cursor:pointer; }
+    button:hover { background:var(--green2); }
+    .hint { color:var(--muted); font-size:.88rem; margin:9px 0 0; }
+    .results { margin-top:18px; display:grid; gap:12px; }
+    .result { border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff; }
+    .result h2 { margin:0 0 14px; font-size:1.1rem; }
+    .tag { display:inline-block; border-radius:6px; padding:4px 8px; font-size:.78rem; font-weight:750; background:var(--pale); color:var(--green); margin-bottom:12px; }
+    .field { display:grid; grid-template-columns: minmax(110px, .7fr) 1.3fr; gap:12px; padding:11px 0; border-top:1px solid #edf1ee; }
+    .field span { color:var(--muted); font-size:.9rem; }
+    .field strong { overflow-wrap:anywhere; }
+    .message { border-radius:10px; background:#edf4fb; color:#4e5d56; padding:14px; }
+    .count { font-size:.9rem; color:var(--muted); margin:0 0 12px; }
+    footer { text-align:center; padding:0 16px 28px; color:var(--muted); font-size:.84rem; }
+    .notice { margin-top:18px; border-left:3px solid var(--accent); padding:10px 12px; color:var(--muted); font-size:.85rem; }
+    @media(max-width:540px) { .panel { padding:18px; } .searchrow { flex-direction:column; } button { width:100%; } .field { grid-template-columns:1fr; gap:2px; } header { padding-top:22px; } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">T</div>
+      <div><strong>TRICEL FEC 2026–2027</strong><span>Tribunal Calificador de Elecciones de la Federación de Estudiantes de la Universidad de Concepción</span></div>
+    </div>
+    <p style="margin:0 0 8px;color:var(--pale);font-weight:750;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem">Elecciones FEC 2026</p>
+    <h1>¿Dónde me corresponde votar?</h1>
+    <p class="intro">Consulta el lugar de votación y la mesa asignada a tu carrera para las elecciones de la Federación de Estudiantes de la Universidad de Concepción.</p>
+  </div>
+</header>
+<main class="wrap">
+  <section class="panel" aria-labelledby="search-title">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:18px">
+      <div style="width:5px;align-self:stretch;background:var(--accent);border-radius:4px"></div>
+      <div><strong style="display:block;font-size:1.05rem">Miércoles 11 y jueves 12 de noviembre de 2026</strong><span style="color:var(--muted);font-size:.9rem">Consulta de locales y mesas de votación</span></div>
+    </div>
+    <label id="search-title" for="career">Ingresa el nombre de tu carrera</label>
+    <div class="searchrow">
+      <input id="career" list="careers" type="search" placeholder="Ej. Ingeniería Civil Química" autocomplete="off">
+      <datalist id="careers"></datalist>
+      <button id="search" type="button">Consultar</button>
+    </div>
+    <p class="hint">Puedes escribir una parte del nombre. También puedes seleccionar una sugerencia.</p>
+    <div id="results" class="results" aria-live="polite"></div>
+    <div class="notice">La información de los locales y las mesas se basa en la planilla de asignaciones proporcionada. Si detectas un error, confirma los datos con el TRICEL FEC.</div>
+  </section>
+  <section class="panel" style="margin-top:16px" aria-labelledby="about-title">
+    <h2 id="about-title" style="font-size:1.2rem;margin:0 0 10px">Sobre el proceso eleccionario</h2>
+    <p style="margin:0 0 12px">Las elecciones de Mesa Única y Vocalías de la FEC son la instancia democrática anual donde el estudiantado de pregrado y postgrado del Campus Concepción elige a sus representantes mediante voto universal y presentando un documento de identidad válido.</p>
+    <p style="margin:0 0 12px">Durante ambas jornadas, las urnas operan durante nueve horas distribuidas en seis zonas temáticas del campus, bajo la estricta fiscalización del TRICEL y apoderados de lista. En este proceso se define la Mesa Directiva por lista cerrada (que requiere mayoría absoluta o segunda vuelta) y siete vocalías programáticas independientes mediante listas abiertas por mayoría relativa, cerrando el segundo día con un escrutinio oral y público calificado por el tribunal electoral.</p>
+    <div style="background:#edf4fb;border-radius:10px;padding:12px 14px;color:var(--green);font-weight:700">Recuerda presentar un documento de identidad válido al momento de votar.</div>
+  </section>
+</main>
+<footer>Tribunal Calificador de Elecciones de la Federación de Estudiantes de la Universidad de Concepción<br>TRICEL FEC 2026–2027 · Elecciones FEC 2026</footer>
+<script>
+const assignments = [{"Carrera": "Administración Pública y Ciencia Política", "Lugar de votación": "Departamento de Administración Pública y Ciencia Política", "Nombre de la mesa": "ACPC"}, {"Carrera": "Agronomía", "Lugar de votación": "Facultad de Agronomía", "Nombre de la mesa": "AGRO"}, {"Carrera": "Antropología", "Lugar de votación": "Facultad de Ciencias Sociales", "Nombre de la mesa": "SOCIALES"}, {"Carrera": "Arquitectura", "Lugar de votación": "Facultad de Arquitectura, Urbanismo y Geografía", "Nombre de la mesa": "FAUG"}, {"Carrera": "Artes Visuales", "Lugar de votación": "Depto. de Artes Plásticas", "Nombre de la mesa": "ARTES"}, {"Carrera": "Astronomía", "Lugar de votación": "Facultad de Ciencias Físicas y Matemáticas", "Nombre de la mesa": "CFM"}, {"Carrera": "Auditoría", "Lugar de votación": "Facultad de Ciencias Económicas y Administrativas", "Nombre de la mesa": "FACEA"}, {"Carrera": "Bachillerato en Ciencias e Innovación", "Lugar de votación": "Facultad de Ciencias Químicas", "Nombre de la mesa": "QUÍMICA"}, {"Carrera": "Bachillerato en Humanidades", "Lugar de votación": "Facultad de Humanidades y Arte", "Nombre de la mesa": "HUMANIDADES"}, {"Carrera": "Bioingeniería", "Lugar de votación": "Facultad de Ciencias Biológicas", "Nombre de la mesa": "ARCO"}, {"Carrera": "Biología", "Lugar de votación": "Facultad de Ciencias Naturales y Oceanográficas", "Nombre de la mesa": "BALLENA"}, {"Carrera": "Biología Marina", "Lugar de votación": "Facultad de Ciencias Naturales y Oceanográficas", "Nombre de la mesa": "BALLENA"}, {"Carrera": "Bioquímica", "Lugar de votación": "Facultad de Farmacia", "Nombre de la mesa": "FARMACIA"}, {"Carrera": "Ciencias Físicas", "Lugar de votación": "Facultad de Ciencias Físicas y Matemáticas", "Nombre de la mesa": "CFM"}, {"Carrera": "Derecho", "Lugar de votación": "Facultad de Ciencias Jurídicas y Sociales", "Nombre de la mesa": "DERECHO"}, {"Carrera": "Educación diferencial", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Educación general básica", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Educación parvularia", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Enfermería", "Lugar de votación": "Facultad de Medicina", "Nombre de la mesa": "SALUD 2"}, {"Carrera": "Fonoaudiología", "Lugar de votación": "Facultad de Medicina", "Nombre de la mesa": "SALUD 2"}, {"Carrera": "Geofísica", "Lugar de votación": "Facultad de Ciencias Físicas y Matemáticas", "Nombre de la mesa": "CFM"}, {"Carrera": "Geografía", "Lugar de votación": "Facultad de Arquitectura, Urbanismo y Geografía", "Nombre de la mesa": "FAUG"}, {"Carrera": "Geología", "Lugar de votación": "Departamento de Ciencias de la Tierra", "Nombre de la mesa": "GEOLOGÍA"}, {"Carrera": "Ingeniería Ambiental", "Lugar de votación": "Facultad de Ciencias Ambientales", "Nombre de la mesa": "EULA"}, {"Carrera": "Ingeniería Civil", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil ? Plan Común", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil Aeroespacial", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil Biomédica", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 3"}, {"Carrera": "Ingeniería Civil de Materiales", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil de Minas", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil Eléctrica", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 3"}, {"Carrera": "Ingeniería Civil Electrónica", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 3"}, {"Carrera": "Ingeniería Civil en Telecomunicaciones", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 3"}, {"Carrera": "Ingeniería Civil Industrial", "Lugar de votación": "Edificio de Ingeniería de Sistemas", "Nombre de la mesa": "ING 1"}, {"Carrera": "Ingeniería Civil Informática", "Lugar de votación": "Edificio de Ingeniería de Sistemas", "Nombre de la mesa": "ING 1"}, {"Carrera": "Ingeniería Civil Matemática", "Lugar de votación": "Facultad de Ciencias Físicas y Matemáticas", "Nombre de la mesa": "CFM"}, {"Carrera": "Ingeniería Civil Mecánica", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil Metalúrgica", "Lugar de votación": "Edificio Tecnológico Mecánico", "Nombre de la mesa": "ING 2"}, {"Carrera": "Ingeniería Civil Química", "Lugar de votación": "Edificio de Ingeniería de Sistemas", "Nombre de la mesa": "ING 1"}, {"Carrera": "Ingeniería Comercial", "Lugar de votación": "Facultad de Ciencias Económicas y Administrativas", "Nombre de la mesa": "FACEA"}, {"Carrera": "Ingeniería en Biotecnología Marina y Acuicultura", "Lugar de votación": "Facultad de Ciencias Naturales y Oceanográficas", "Nombre de la mesa": "BALLENA"}, {"Carrera": "Ingeniería en Biotecnología Vegetal", "Lugar de votación": "Facultad de Ciencias Forestales", "Nombre de la mesa": "FORESTAL"}, {"Carrera": "Ingeniería en Conservación de Recursos Naturales", "Lugar de votación": "Facultad de Ciencias Forestales", "Nombre de la mesa": "FORESTAL"}, {"Carrera": "Ingeniería Estadística", "Lugar de votación": "Facultad de Ciencias Físicas y Matemáticas", "Nombre de la mesa": "CFM"}, {"Carrera": "Ingeniería Forestal", "Lugar de votación": "Facultad de Ciencias Forestales", "Nombre de la mesa": "FORESTAL"}, {"Carrera": "Kinesiología", "Lugar de votación": "Facultad de Medicina", "Nombre de la mesa": "SALUD 1"}, {"Carrera": "Licenciatura en Historia", "Lugar de votación": "Departamento de Historia", "Nombre de la mesa": "HISTORIA"}, {"Carrera": "Licenciatura en Matemática", "Lugar de votación": "Facultad de Ciencias Físicas y Matemáticas", "Nombre de la mesa": "CFM"}, {"Carrera": "Licenciatura en Química-Químico", "Lugar de votación": "Facultad de Ciencias Químicas", "Nombre de la mesa": "QUÍMICA"}, {"Carrera": "Medicina", "Lugar de votación": "Facultad de Medicina", "Nombre de la mesa": "SALUD 1"}, {"Carrera": "Medicina Veterinaria", "Lugar de votación": "Facultad de Ciencias Veterinarias", "Nombre de la mesa": "VET"}, {"Carrera": "Nutrición y Dietética", "Lugar de votación": "Facultad de Farmacia", "Nombre de la mesa": "FARMACIA"}, {"Carrera": "Obstetricia y puericultura", "Lugar de votación": "Facultad de Medicina", "Nombre de la mesa": "SALUD 2"}, {"Carrera": "Odontología", "Lugar de votación": "Facultad de Odontología", "Nombre de la mesa": "ODONTO"}, {"Carrera": "Pedagogía en artes visuales", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Pedagogía en cs. Naturales y biología", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 2"}, {"Carrera": "Pedagogía en cs. Naturales y física", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 2"}, {"Carrera": "Pedagogía en cs. Naturales y química", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 2"}, {"Carrera": "Pedagogía en educación física", "Lugar de votación": "Departamento de Educación Física", "Nombre de la mesa": "DEF"}, {"Carrera": "Pedagogía en educación musical", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 2"}, {"Carrera": "Pedagogía en español", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 2"}, {"Carrera": "Pedagogía en filosofía", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 2"}, {"Carrera": "Pedagogía en historia y geografía", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Pedagogía en inglés", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Pedagogía en matemáticas", "Lugar de votación": "Facultad de Educación", "Nombre de la mesa": "EDUCA 1"}, {"Carrera": "Periodismo", "Lugar de votación": "Facultad de Ciencias Sociales", "Nombre de la mesa": "SOCIALES"}, {"Carrera": "Psicología", "Lugar de votación": "Facultad de Ciencias Sociales", "Nombre de la mesa": "SOCIALES"}, {"Carrera": "Química y Farmacia", "Lugar de votación": "Facultad de Farmacia", "Nombre de la mesa": "FARMACIA"}, {"Carrera": "Químico Analista", "Lugar de votación": "Facultad de Ciencias Químicas", "Nombre de la mesa": "QUÍMICA"}, {"Carrera": "Sociología", "Lugar de votación": "Facultad de Ciencias Sociales", "Nombre de la mesa": "SOCIALES"}, {"Carrera": "Teatro", "Lugar de votación": "Facultad de Humanidades y Arte", "Nombre de la mesa": "HUMANIDADES"}, {"Carrera": "Tecnología médica", "Lugar de votación": "Facultad de Medicina", "Nombre de la mesa": "SALUD 1"}, {"Carrera": "Trabajo Social", "Lugar de votación": "Facultad de Ciencias Sociales", "Nombre de la mesa": "SOCIALES"}, {"Carrera": "Traducción/Interpretación en Idiomas Extranjeros", "Lugar de votación": "Facultad de Humanidades y Arte", "Nombre de la mesa": "HUMANIDADES"}];
+const input = document.getElementById('career');
+const datalist = document.getElementById('careers');
+const results = document.getElementById('results');
+const normalize = value => value.normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().trim();
+assignments.forEach(item => {
+  const option = document.createElement('option');
+  option.value = item['Carrera'];
+  datalist.appendChild(option);
+});
+function showResults() {
+  const query = normalize(input.value);
+  results.replaceChildren();
+  if (!query) {
+    results.innerHTML = '<div class="message">Escribe el nombre de tu carrera para consultar la asignación.</div>';
+    return;
+  }
+  const matches = assignments.filter(item => normalize(item['Carrera']).includes(query));
+  if (!matches.length) {
+    results.innerHTML = '<div class="message">No encontramos una carrera con ese texto. Revisa la escritura o prueba con una parte diferente del nombre.</div>';
+    return;
+  }
+  const count = document.createElement('p');
+  count.className = 'count';
+  count.textContent = matches.length === 1 ? 'Se encontró 1 carrera.' : `Se encontraron ${matches.length} carreras.`;
+  results.appendChild(count);
+  matches.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'result';
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    tag.textContent = 'Carrera';
+    const title = document.createElement('h2');
+    title.textContent = item['Carrera'];
+    card.append(tag, title);
+    [['Lugar de votación', item['Lugar de votación']], ['Nombre de la mesa', item['Nombre de la mesa']]].forEach(([label, value]) => {
+      const row = document.createElement('div');
+      row.className = 'field';
+      const name = document.createElement('span');
+      name.textContent = label;
+      const content = document.createElement('strong');
+      content.textContent = value;
+      row.append(name, content);
+      card.appendChild(row);
+    });
+    results.appendChild(card);
+  });
+}
+document.getElementById('search').addEventListener('click', showResults);
+input.addEventListener('keydown', event => { if (event.key === 'Enter') showResults(); });
+input.addEventListener('input', () => { if (!input.value.trim()) results.replaceChildren(); });
+</script>
+</body>
+</html>
